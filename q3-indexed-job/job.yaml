@@ -4,7 +4,7 @@ metadata:
   name: shard-validation-job
 spec:
   completions: 8
-  parallelism: 6
+  parallelism: 4
   completionMode: Indexed
   template:
     spec:

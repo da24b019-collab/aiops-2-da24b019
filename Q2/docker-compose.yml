@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.multistage
+    ports:
+      - "8000:8000"
+    depends_on:
+      - cache
+
+  cache:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+

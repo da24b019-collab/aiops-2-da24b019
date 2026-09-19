@@ -6,12 +6,10 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-# Load the trained pipeline once at startup
+
 model = joblib.load("model.joblib")
 
-# Connect to Redis. "cache" is the hostname we'll use inside Docker Compose —
-# Compose lets containers reach each other by service name.
-# decode_responses=True means we get plain strings back, not bytes.
+
 r = redis.Redis(host="cache", port=6379, decode_responses=True)
 
 CACHE_TTL_SECONDS = 60  # how long a cached prediction stays valid
@@ -35,10 +33,10 @@ def predict(req: PredictRequest):
         elapsed_ms = (time.time() - start) * 1000
         return {"label": cached_label, "cached": True, "elapsed_ms": elapsed_ms}
 
-    # Cache MISS — compute the prediction
+    
     label = model.predict([req.text])[0]
 
-    # Store it in Redis with a TTL so old predictions eventually expire
+
     r.set(req.text, label, ex=CACHE_TTL_SECONDS)
 
     elapsed_ms = (time.time() - start) * 1000

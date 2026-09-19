@@ -1,20 +1,12 @@
-"""
-generate_dataset.py
 
-Generates a deterministic, synthetic dataset of 1,000 labeled spam/ham
-messages for the spam-detection API assignment. No external download needed.
-"""
 
 import random
 import pandas as pd
 
-# Fixing the seed makes this script REPRODUCIBLE — anyone who runs it
-# gets the exact same 1,000 messages in the exact same order every time.
+
 random.seed(42)
 
-# --- Message templates ---
-# {placeholders} get filled in randomly below, so each generated message
-# looks a little different even though it comes from a small template pool.
+
 
 SPAM_TEMPLATES = [
     "WIN a FREE {prize} now! Click here: {url}",
@@ -34,7 +26,6 @@ HAM_TEMPLATES = [
     "What time does {activity} start on {day}?",
 ]
 
-# --- Fillers for the placeholders above ---
 PRIZES = ["iPhone", "cash prize", "gift card", "vacation", "laptop"]
 URLS = ["bit.ly/xyz123", "tinyurl.com/abc", "win-now.co/claim"]
 ACTIVITIES = ["lunch", "the study group", "basketball", "the project meeting"]
@@ -43,8 +34,7 @@ DAYS = ["Monday", "Friday", "tomorrow", "the weekend"]
 rows = []
 
 for i in range(1000):
-    # 30% chance of generating a spam message, 70% chance of ham.
-    # This mirrors a realistic class imbalance (most messages aren't spam).
+
     if random.random() < 0.3:
         t = random.choice(SPAM_TEMPLATES)
         msg = t.format(prize=random.choice(PRIZES), url=random.choice(URLS))
@@ -54,7 +44,6 @@ for i in range(1000):
         msg = t.format(activity=random.choice(ACTIVITIES), day=random.choice(DAYS))
         rows.append((msg, "ham"))
 
-# Save as a two-column CSV: text, label — this is what train.py reads in.
 df = pd.DataFrame(rows, columns=["text", "label"])
 df.to_csv("spam_dataset.csv", index=False)
 
